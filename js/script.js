@@ -1,44 +1,34 @@
-// Your OpenWeatherMap API key
-const API_KEY = 'your_openweathermap_api_key';
-
-// Function to fetch weather data
-async function fetchWeather(time) {
-    const location = 'New York City';
-    const date = '2024-11-28'; // Fixed for the itinerary
-    const endpoint = `https://api.openweathermap.org/data/2.5/forecast?q=${location}&appid=${API_KEY}&units=imperial`;
-
+async function fetchWeatherData() {
     try {
-        const response = await fetch(endpoint);
-        const data = await response.json();
-
-        // Filter weather data by time of the day
-        const weatherData = data.list.find(entry => entry.dt_txt.includes(`${date} ${time}`));
-        if (weatherData) {
-            return {
-                description: weatherData.weather[0].description,
-                temp: Math.round(weatherData.main.temp) + '°F',
-            };
-        }
-        return { description: 'No data', temp: '--' };
+        // Load the weather.json file
+        const response = await fetch('weather.json');
+        const weatherData = await response.json();
+        return weatherData;
     } catch (error) {
-        console.error('Error fetching weather data:', error);
-        return { description: 'Error', temp: '--' };
+        console.error('Error loading weather data:', error);
+        return {};
     }
 }
 
-// Function to update the weather for each itinerary item
 async function updateWeather() {
+    // Fetch weather data
+    const weatherData = await fetchWeatherData();
+
+    // Find all itinerary items
     const itineraryItems = document.querySelectorAll('.itinerary');
 
-    for (const item of itineraryItems) {
+    itineraryItems.forEach(item => {
+        // Get the time from the data-time attribute
         const time = item.getAttribute('data-time');
-        const weatherDiv = item.querySelector('.weather');
 
-        // Fetch weather data
-        const weather = await fetchWeather(time);
+        // Find the weather for this time
+        const weather = weatherData[time] || { description: 'No data', temp: '--' };
+
+        // Update the weather div with the description and temperature
+        const weatherDiv = item.querySelector('.weather');
         weatherDiv.textContent = `${weather.description}, ${weather.temp}`;
-    }
+    });
 }
 
-// Update weather on page load
+// Run the updateWeather function on page load
 updateWeather();

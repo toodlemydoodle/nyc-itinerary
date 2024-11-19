@@ -23,6 +23,10 @@ h1 {
     gap: 15px;
     max-width: 800px;
 }
+.itinerary {
+    height: 200px; /* Fixed height for each module */
+    overflow: hidden; /* Ensures content does not overflow */
+}
 
 .time {
     font-size: 1.2em;
