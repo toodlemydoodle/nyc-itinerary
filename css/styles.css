@@ -8,8 +8,10 @@ body {
 
 h1 {
     text-align: center;
-    color: #007bff;
-    margin: 20px 0;
+    font-family: 'Dancing Script', cursive; /* Requires Google Font */
+    color: #ff69b4;
+    font-size: 3rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .itinerary {
